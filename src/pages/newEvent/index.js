@@ -74,7 +74,7 @@ export default function NewEvent() {
                         onChange={e => setDescription(e.target.value)}
                     />
                     
-                    <button className="button" type="submit">Cadastrar</button>
+                    <button className="btn btn-outline-primary" style={{marginTop:'15px'}} type="submit">Cadastrar</button>
                 </form>
             </div>
         </div>

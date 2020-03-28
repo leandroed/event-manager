@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import './card-style.css';
 import { useHistory } from 'react-router-dom';
+import { FiTrash2 } from 'react-icons/fi';
+import { getToken } from '../../services/auth';
+import api from '../../services/api';
 
 const Card = props => {
     const history = useHistory();
@@ -10,6 +13,15 @@ const Card = props => {
         e.preventDefault();
 
         history.push({ pathname: 'eventDetail', state: props });
+    }
+
+    async function handleDelete(eventId) {
+        try {
+            await api.delete(`event/${eventId}`, { headers: { 'Authorization': getToken() }});
+            window.location.reload();
+        } catch (e) {
+            console.log('Não foi possível remover o evento.');
+        }
     }
 
     return (
@@ -31,6 +43,11 @@ const Card = props => {
                 <p className="card-text text-secondary">{props.address}</p>
                 <p className="card-text text-secondary">{props.description}</p>
                 <button type="button" className="btn btn-outline-success" onClick={handleShow}>Visualizar</button>
+                { props.user.id === parseInt(localStorage.getItem('userId')) ?
+                    <button type="button" className="card-delete" onClick={() => handleDelete(props.eventId)}>
+                        <FiTrash2 size={20} />
+                    </button> : <span/>
+                }
             </div>
         </div>
     );

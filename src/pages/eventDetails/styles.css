@@ -52,3 +52,8 @@
 .event-details-container .list-container {
     max-height: 300px;
 }
+
+.list-group-item .tbRow {
+    width: 210px;
+    padding-right: 12px;
+}

@@ -35,3 +35,12 @@ body {
 .card-img-top:hover {
     transform: scale(1.8);
 }
+
+.card-delete {
+    background-color: Transparent;
+    background-repeat: no-repeat;
+    border: none;
+    outline: none;
+    margin-left: 20px;
+    color: red;
+}
