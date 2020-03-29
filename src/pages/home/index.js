@@ -17,6 +17,7 @@ export default function Home() {
     useEffect(() => {
         api.get('event', { headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': getToken() } }).then(response => {
             setEvents(response.data);
+            console.log(response.data)
         })
     }, []);
 
@@ -41,10 +42,9 @@ export default function Home() {
             
             <div className="container-fluid d-flex justify-content-center container-align">
                 <div className="row">
-
                     {events.map(event => (
                         <div className="col-md-4" key={event.id} style={{ paddingBottom: '30px' }}>
-                            <Card imgsrc={img1} title={event.name} description={event.description} date={event.date} address={event.address} eventId={event.id} user={event.user} />
+                            <Card imgsrc={event.image} title={event.name} description={event.description} date={event.date} address={event.address} eventId={event.id} user={event.user} />
                         </div>
                     ))}
 

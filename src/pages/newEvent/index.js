@@ -12,6 +12,7 @@ const NewEvent = props => {
     const [address, setAddress] = useState('');
     const [description, setDescription] = useState('');
     const [date, setDate] = useState(props?.location?.state?.date ? new Date(props.location.state.date) : new Date());
+    const [image, setImage] = useState('');
 
     const history = useHistory();
 
@@ -23,11 +24,12 @@ const NewEvent = props => {
             address,
             description,
             date,
+            image,
         };
 
         try {
             if (props?.location?.state === undefined) {
-                const response = await api.post('event', data, { headers: { 'Content-Type': 'application/json', 'Authorization': getToken() }});
+                await api.post('event', data, { headers: { 'Content-Type': 'application/json', 'Authorization': getToken() }});
             } else {
                 await api.put(`event/${props.location.state.eventId}`, data, { headers: { 'Content-Type': 'application/json', 'Authorization': getToken() }});
             }
@@ -38,10 +40,23 @@ const NewEvent = props => {
     }
 
     useEffect(() => {
+        console.log(props.location.state)
         setName(props?.location?.state?.title ? props.location.state.title : '');
         setAddress(props?.location?.state?.address ? props.location.state.address : '');
         setDescription(props?.location?.state?.description ? props.location.state.description : '');
+        setImage(props?.location?.state?.imgsrc? props.location.state.imgsrc : '');
     }, [props]);
+
+    function handleFile (e) {
+        const content = e.target.result;
+        setImage(content.toString())
+    }
+
+    function handleChangeFile (file) {
+        let reader = new FileReader();
+        reader.onloadend = handleFile;
+        reader.readAsDataURL(file);
+    }
 
     return (
         <div className="new-event-container">
@@ -58,6 +73,10 @@ const NewEvent = props => {
                 </section>
 
                 <form onSubmit={handleRegister}>
+                    <p style={{paddingLeft: '5px'}}>Imagem do evento
+                        <input type="file" accept=".jpg" style={{border: 'none', marginLeft: '-25px', marginBottom: '-35px'}} onChange={e => handleChangeFile(e.target.files[0])} />
+                    </p>
+
                     <input 
                         placeholder="Nome do evento"
                         value={name}
@@ -79,11 +98,12 @@ const NewEvent = props => {
                         timeIntervals={15}
                         dateFormat="dd/MM/yyyy h:mm"
                     />
+
                     <input
                         placeholder="Descrição"
                         value={description}
                         onChange={e => setDescription(e.target.value)}
-                    />
+                    /> 
 
                     <button className="btn btn-outline-primary" style={{marginTop:'15px'}} type="submit">{props?.location?.state !== undefined ? 'Editar' : 'Cadastrar'}</button>
                 </form>
