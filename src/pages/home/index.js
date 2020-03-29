@@ -5,7 +5,6 @@ import { FiLogOut } from 'react-icons/fi';
 import { getToken, logout } from '../../services/auth';
 import api from '../../services/api';
 import Card from '../../components/Cards/CardUI';
-import img1 from '../../assets/home.jpg';
 import './styles.css';
 
 export default function Home() {
@@ -17,7 +16,6 @@ export default function Home() {
     useEffect(() => {
         api.get('event', { headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': getToken() } }).then(response => {
             setEvents(response.data);
-            console.log(response.data)
         })
     }, []);
 

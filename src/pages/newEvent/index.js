@@ -40,7 +40,6 @@ const NewEvent = props => {
     }
 
     useEffect(() => {
-        console.log(props.location.state)
         setName(props?.location?.state?.title ? props.location.state.title : '');
         setAddress(props?.location?.state?.address ? props.location.state.address : '');
         setDescription(props?.location?.state?.description ? props.location.state.description : '');
@@ -49,7 +48,12 @@ const NewEvent = props => {
 
     function handleFile (e) {
         const content = e.target.result;
-        setImage(content.toString())
+        if (e.loaded < 356000) {
+            setImage(content.toString())
+        }
+        else {
+            alert('A imagem selecionada é muito grande.');
+        }
     }
 
     function handleChangeFile (file) {
