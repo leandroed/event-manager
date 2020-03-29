@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import { FiTrash2 } from 'react-icons/fi';
 import { getToken } from '../../services/auth';
+import ReactToExcel from 'react-html-table-to-excel';
 import './styles.css';
 import api from '../../services/api.js';
 
@@ -80,7 +81,7 @@ const NewEvent = props => {
                         <form>
                             <div className="row list-container list-scroll">
                                 <div className="col-md-12" style={{overflow: 'auto'}}> 
-                                    <table className="list-group">  
+                                    <table className="list-group" id="table-to-xls">  
                                         <thead className="list-group-item">
                                             <tr>
                                                 <th style={{width: '45px'}}></th>
@@ -104,8 +105,14 @@ const NewEvent = props => {
                                     </table>
                                 </div>  
                             </div>
-            
-                            <button className="button" type="submit">Download</button>
+
+                            <ReactToExcel
+                                className="button"
+                                table="table-to-xls"
+                                filename="guestList"
+                                sheet="sheet 1"
+                                buttonText="Download"
+                            />
                         </form>
                     : (guests.filter(guest => guest.user.id === parseInt(localStorage.getItem('userId')))).length === 0 ?              
                         <form onSubmit={handleConfirm}>
