@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { login } from '../../services/auth';
 import api from '../../services/api';
 import background from '../../assets/home.jpg';
 import './styles.css';
@@ -25,7 +26,10 @@ export default function Register() {
       const response = await api.post('register', data, { headers: { 'Content-Type': 'application/json', 'Authorization': 'Basic Y29tLmxhbmRpeC4yMWFub3M6dGVzdGU=' } });
 
       console.log('Sucesso cadastro result: ', response)
-      history.push('/');
+      localStorage.setItem('userId', response.data.id);
+      localStorage.setItem('userInfo', response.data.username);
+      login(`Bearer ${response.data.authorization.access_token}`);
+      history.push('/app');
     } catch (ex) {
       console.log(ex)
     }

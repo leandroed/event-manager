@@ -16,8 +16,8 @@ const NewEvent = props => {
 
     useEffect(() => {
         api.get(`list/${data.eventId}`, { headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': getToken() } }).then(response => {
-            console.log(response.data[0].list)
             setGuests(response.data[0].list ? response.data[0].list : []);
+            console.log(response.data[0].list)
         })
     }, [data]);
 

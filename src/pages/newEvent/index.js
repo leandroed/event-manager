@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import { getToken } from '../../services/auth';
@@ -7,11 +7,11 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './styles.css';
 
-export default function NewEvent() {
+const NewEvent = props => {
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
     const [description, setDescription] = useState('');
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState(props?.location?.state?.date ? new Date(props.location.state.date) : new Date());
 
     const history = useHistory();
 
@@ -26,20 +26,31 @@ export default function NewEvent() {
         };
 
         try {
-            const response = await api.post('event', data, { headers: { 'Content-Type': 'application/json', 'Authorization': getToken() }});
-            console.log(`Id retornado: ${response.data}`);
+            if (props?.location?.state === undefined) {
+                const response = await api.post('event', data, { headers: { 'Content-Type': 'application/json', 'Authorization': getToken() }});
+            } else {
+                await api.put(`event/${props.location.state.eventId}`, data, { headers: { 'Content-Type': 'application/json', 'Authorization': getToken() }});
+            }
             history.push('/app')
         } catch (ex) {
             alert('Não foi possível realizar o cadastro do evento.');
         }
     }
 
+    useEffect(() => {
+        setName(props?.location?.state?.title ? props.location.state.title : '');
+        setAddress(props?.location?.state?.address ? props.location.state.address : '');
+        setDescription(props?.location?.state?.description ? props.location.state.description : '');
+    }, [props]);
+
     return (
         <div className="new-event-container">
             <div className="content">
                 <section>
-                    <h1>Cadastrar novo evento</h1>
-                    <p>Faça o cadastro de seu evento.</p>
+                    <div>
+                        <h1>{props?.location?.state !== undefined ? 'Editar evento' : 'Cadastrar novo evento'}</h1>
+                        <p>{ props?.location?.state !== undefined ? 'Faça a edição de seu evento.' : 'Faça o cadastro de seu evento.'}</p>
+                    </div>
 
                     <Link className="back-link" to="/app">
                         <FiArrowLeft size={16} />
@@ -73,10 +84,12 @@ export default function NewEvent() {
                         value={description}
                         onChange={e => setDescription(e.target.value)}
                     />
-                    
-                    <button className="btn btn-outline-primary" style={{marginTop:'15px'}} type="submit">Cadastrar</button>
+
+                    <button className="btn btn-outline-primary" style={{marginTop:'15px'}} type="submit">{props?.location?.state !== undefined ? 'Editar' : 'Cadastrar'}</button>
                 </form>
             </div>
         </div>
     );
 }
+
+export default NewEvent;

@@ -16,7 +16,6 @@ export default function Home() {
 
     useEffect(() => {
         api.get('event', { headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': getToken() } }).then(response => {
-            console.log(response.data)
             setEvents(response.data);
         })
     }, []);
